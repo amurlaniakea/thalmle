@@ -1,0 +1,14 @@
+Package: thalmle
+Type: Package
+Title: Experimental Targeted HAL-MLE for a Continuous-Dose Dose-Response Curve
+Version: 0.0.2
+Authors@R: person("Pedro", "Sordo Martínez", email = "amurlaniakea@gmail.com", role = c("aut", "cre"))
+Description: Experimental, unofficial implementation of the targeting step of the
+    Targeted HAL-MLE of Rodriguez, Diaz-Ordaz, Lehmann and van der Laan
+    (arXiv:2607.03824) for a continuous-dose dose-response curve. Point
+    estimates only; not validated against the preprint.
+License: AGPL (>= 3)
+Encoding: UTF-8
+Imports: glmnet, stats
+Suggests: testthat (>= 3.0.0), hal9001, haldensify
+Config/testthat/edition: 3
