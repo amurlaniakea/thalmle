@@ -7,15 +7,15 @@
 select_lambda_by_size(sizes, n, cv_index = NULL)
 }
 \arguments{
-\item{sizes}{vector de tamaños candidatos}
+\item{sizes}{vector de tamanos candidatos}
 
-\item{n}{tamaño de muestra}
+\item{n}{tamano de muestra}
 
-\item{cv_index}{índice del candidato de CV (opcional)}
+\item{cv_index}{indice del candidato de CV (opcional)}
 }
 \value{
-índice seleccionado
+indice seleccionado
 }
 \description{
-Selección de lambda por recorte de tamaño del modelo.
+Seleccion de lambda por recorte de tamano del modelo.
 }

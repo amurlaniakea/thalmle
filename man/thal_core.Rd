@@ -24,23 +24,23 @@ thal_core(
 
 \item{Y}{resultado}
 
-\item{Qf}{objeto Q con método predict}
+\item{Qf}{objeto Q con metodo predict}
 
 \item{gf}{objeto densidad condicional con predict}
 
-\item{om}{densidad marginal (función de evaluación)}
+\item{om}{densidad marginal (funcion de evaluacion)}
 
-\item{grid}{puntos de evaluación de la curva}
+\item{grid}{puntos de evaluacion de la curva}
 
-\item{n_proj}{tamaño de proyección (por defecto length(A))}
+\item{n_proj}{tamano de proyeccion (por defecto length(A))}
 
-\item{w_cap}{"obs_max" o numérico (por defecto "obs_max")}
+\item{w_cap}{"obs_max" o numerico (por defecto "obs_max")}
 
-\item{n_knots}{número de nudos para base spline (50L)}
+\item{n_knots}{numero de nudos para base spline (50L)}
 }
 \value{
 lista con psi_hat, psi_init, size, lambda
 }
 \description{
-Núcleo del targeting LASSO para T-HAL-MLE (pasos 3-5 del algoritmo).
+Nucleo del targeting LASSO para T-HAL-MLE (pasos 3-5 del algoritmo).
 }

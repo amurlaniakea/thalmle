@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2026 Pedro Sordo Martínez
+# Copyright (C) 2026 Pedro Sordo Martinez
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -20,10 +20,10 @@
 
 #' make_knots
 #'
-#' Genera n puntos de anclaje (knots) basados en cuantiles empíricos.
+#' Genera n puntos de anclaje (knots) basados en cuantiles empiricos.
 #'
 #' @param x datos observados
-#' @param n número de nudos
+#' @param n numero de nudos
 #' @return vector de nudos
 #' @export
 make_knots <- function(x, n = 10) {
@@ -54,7 +54,7 @@ spline_basis <- function(x, knots, k = 1L) {
 
 #' pinv_sym
 #'
-#' Pseudo-inversa de Moore-Penrose para matriz simétrica mediante SVD.
+#' Pseudo-inversa de Moore-Penrose para matriz simetrica mediante SVD.
 #'
 #' @param M matriz cuadrada
 #' @param tol tolerancia para valores singulares (1e-8)
@@ -69,21 +69,21 @@ pinv_sym <- function(M, tol = 1e-8) {
 
 #' select_lambda_by_size
 #'
-#' Selección de lambda por recorte de tamaño del modelo.
+#' Seleccion de lambda por recorte de tamano del modelo.
 #'
-#' @param sizes vector de tamaños candidatos
-#' @param n tamaño de muestra
-#' @param cv_index índice del candidato de CV (opcional)
-#' @return índice seleccionado
+#' @param sizes vector de tamanos candidatos
+#' @param n tamano de muestra
+#' @param cv_index indice del candidato de CV (opcional)
+#' @return indice seleccionado
 #' @export
 select_lambda_by_size <- function(sizes, n, cv_index = NULL) {
-  # TODO: Verificar con la Sección 5.1 del preprint sobre límites exactos.
+  # TODO: Verificar con la Seccion 5.1 del preprint sobre limites exactos.
   L <- ceiling(6 * n^(1/5))
   U <- floor(9 * n^(1/5))
   if (!is.null(cv_index)) {
     val <- sizes[cv_index]
     if (val >= L && val <= U) return(cv_index)
-    # Si fuera de rango, devolver el más cercano al rango válido
+    # Si fuera de rango, devolver el mas cercano al rango valido
     if (val < L) {
       idx <- which.min(abs(sizes - L))
     } else {
@@ -93,7 +93,7 @@ select_lambda_by_size <- function(sizes, n, cv_index = NULL) {
   }
   in_range <- which(sizes >= L & sizes <= U)
   if (length(in_range) > 0) return(in_range[1])
-  # Si ninguno en rango, devolver el más cercano al rango
+  # Si ninguno en rango, devolver el mas cercano al rango
   closest <- which.min(abs(sizes - mean(c(L, U))))
   closest
 }

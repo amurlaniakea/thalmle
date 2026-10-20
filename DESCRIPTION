@@ -7,7 +7,7 @@ Description: Experimental, unofficial implementation of the targeting step of th
     Targeted HAL-MLE of Rodriguez, Diaz-Ordaz, Lehmann and van der Laan
     (arXiv:2607.03824) for a continuous-dose dose-response curve. Point
     estimates only; not validated against the preprint.
-License: AGPL-3.0-or-later
+License: AGPL (>= 3)
 Encoding: UTF-8
 URL: https://github.com/amurlaniakea/thalmle
 BugReports: https://github.com/amurlaniakea/thalmle/issues

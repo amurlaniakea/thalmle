@@ -15,5 +15,5 @@ pinv_sym(M, tol = 1e-08)
 pseudo-inversa
 }
 \description{
-Pseudo-inversa de Moore-Penrose para matriz simétrica mediante SVD.
+Pseudo-inversa de Moore-Penrose para matriz simetrica mediante SVD.
 }

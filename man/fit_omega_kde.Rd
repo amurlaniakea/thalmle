@@ -10,7 +10,7 @@ fit_omega_kde(A)
 \item{A}{vector de dosis}
 }
 \value{
-función (closure) que evalúa la densidad en nuevos puntos
+funcion (closure) que evalua la densidad en nuevos puntos
 }
 \description{
 Densidad marginal por KDE usando stats::density.

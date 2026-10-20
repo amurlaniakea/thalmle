@@ -16,8 +16,8 @@ fit_Q_hal(A, W, Y, smoothness_orders = 0L)
 \item{smoothness_orders}{orden (entero largo, por defecto 0L para DGP 1/2)}
 }
 \value{
-objeto con método predict funcional
+objeto con metodo predict funcional
 }
 \description{
-Regresión de resultado Q con HAL (preferente) o fallback glmnet/lm.
+Regresion de resultado Q con HAL (preferente) o fallback glmnet/lm.
 }

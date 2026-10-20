@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2026 Pedro Sordo Martínez
+# Copyright (C) 2026 Pedro Sordo Martinez
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -20,26 +20,27 @@
 
 #' fit_Q_hal
 #'
-#' Regresión de resultado Q con HAL (preferente) o fallback glmnet/lm.
+#' Regresion de resultado Q con HAL (preferente) o fallback glmnet/lm.
 #'
 #' @param A vector dosis
 #' @param W covariables
 #' @param Y resultado
 #' @param smoothness_orders orden (entero largo, por defecto 0L para DGP 1/2)
-#' @return objeto con método predict funcional
+#' @return objeto con metodo predict funcional
 #' @export
 fit_Q_hal <- function(A, W, Y, smoothness_orders = 0L) {
-  # TODO: Verificar parámetros exactos de hal9001 con el preprint.
-  if (length(A) != length(Y) || length(A) != length(W)) {
-    stop("A, W y Y deben tener la misma longitud")
+  # TODO: Verificar parametros exactos de hal9001 con el preprint.
+  n_obs <- length(A)
+  if (length(Y) != n_obs || NROW(W) != n_obs) {
+    stop("A, W y Y deben tener el mismo numero de observaciones")
   }
   X <- if (is.data.frame(W)) W else data.frame(W = W)
   df <- data.frame(A = A, X)
   if (requireNamespace("hal9001", quietly = TRUE)) {
     tryCatch({
-      # Se usaría: hal9001::fit_hal(X = df, Y = Y, smoothness_orders = smoothness_orders)
+      # Se usaria: hal9001::fit_hal(X = df, Y = Y, smoothness_orders = smoothness_orders)
       # Fallback a stub funcional con mensaje informativo
-      stop("Uso de hal9001 pendiente; se requiere implementación real del preprint")
+      stop("Uso de hal9001 pendiente; se requiere implementacion real del preprint")
     }, error = function(e) {
       message("hal9001 no funcional: ", conditionMessage(e))
       # Fallback seguro con glmnet
@@ -52,7 +53,7 @@ fit_Q_hal <- function(A, W, Y, smoothness_orders = 0L) {
 }
 
 .fit_Q_fallback <- function(df, Y, smoothness_orders) {
-  # Fallback seguro: usa glmnet si está disponible, si no lm base.
+  # Fallback seguro: usa glmnet si esta disponible, si no lm base.
   res <- list(
     smoothness_orders = smoothness_orders,
     fitted = list(status = "fallback_glmnet_or_lm", call = match.call())

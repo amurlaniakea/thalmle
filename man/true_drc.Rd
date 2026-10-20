@@ -15,7 +15,7 @@ true_drc(a, d)
 valor escalar
 }
 \description{
-Función verdadera de respuesta a dosis (DGP). Fórmula placeholder coherente:
+Funcion verdadera de respuesta a dosis (DGP). Formula placeholder coherente:
 DGP 1: sigmoide con discontinuidad en a = 5.
 DGP 2: lineal con pendiente creciente.
 TODO: Verificar con ecuaciones exactas del preprint arXiv:2607.03824.

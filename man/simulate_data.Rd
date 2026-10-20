@@ -7,7 +7,7 @@
 simulate_data(n = 500, dgp = 1, treatment = "uniform")
 }
 \arguments{
-\item{n}{tamaño muestra}
+\item{n}{tamano muestra}
 
 \item{dgp}{1, 2 o 3}
 

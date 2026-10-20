@@ -1,4 +1,4 @@
-# thalmle
+# thalmle 🧬
 
 **Experimental, unofficial R implementation of the Targeted HAL-MLE (T-HAL-MLE)
 for a continuous-dose dose-response curve.**

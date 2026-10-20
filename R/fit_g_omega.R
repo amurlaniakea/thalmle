@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2026 Pedro Sordo Martínez
+# Copyright (C) 2026 Pedro Sordo Martinez
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -23,7 +23,7 @@
 #' Densidad marginal por KDE usando stats::density.
 #'
 #' @param A vector de dosis
-#' @return función (closure) que evalúa la densidad en nuevos puntos
+#' @return funcion (closure) que evalua la densidad en nuevos puntos
 #' @export
 fit_omega_kde <- function(A) {
   if (length(A) < 2) stop("A debe tener al menos 2 observaciones")
@@ -40,11 +40,11 @@ fit_omega_kde <- function(A) {
 #' @return objeto densidad (stub documentado)
 #' @export
 fit_g_haldensify <- function(A, W) {
-  # TODO: Verificar parámetros exactos de haldensify con el preprint.
+  # TODO: Verificar parametros exactos de haldensify con el preprint.
   # Advertencia (README): predict() debe llamarse con trim = FALSE
   # para evitar floors dependientes del batch.
   if (!requireNamespace("haldensify", quietly = TRUE)) {
     stop("fit_g_haldensify requiere el paquete haldensify (no instalado)")
   }
-  stop("Implementación pendiente: fit_g_haldensify — wrapper básico pendiente; usar trim = FALSE en predict() según preprint")
+  stop("Implementacion pendiente: fit_g_haldensify — wrapper basico pendiente; usar trim = FALSE en predict() segun preprint")
 }

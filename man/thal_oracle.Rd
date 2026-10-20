@@ -13,13 +13,13 @@ thal_oracle(
 )
 }
 \arguments{
-\item{n}{tamaño muestra (300)}
+\item{n}{tamano muestra (300)}
 
 \item{dgp}{DGP (1)}
 
 \item{treatment}{tipo de tratamiento ("uniform")}
 
-\item{q_init}{tipo inicialización Q ("misspecified")}
+\item{q_init}{tipo inicializacion Q ("misspecified")}
 
 \item{...}{argumentos adicionales para thal_core}
 }

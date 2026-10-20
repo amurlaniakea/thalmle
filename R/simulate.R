@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Copyright (C) 2026 Pedro Sordo Martínez
+# Copyright (C) 2026 Pedro Sordo Martinez
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -20,7 +20,7 @@
 
 #' true_drc
 #'
-#' Función verdadera de respuesta a dosis (DGP). Fórmula placeholder coherente:
+#' Funcion verdadera de respuesta a dosis (DGP). Formula placeholder coherente:
 #' DGP 1: sigmoide con discontinuidad en a = 5.
 #' DGP 2: lineal con pendiente creciente.
 #' TODO: Verificar con ecuaciones exactas del preprint arXiv:2607.03824.
@@ -45,7 +45,7 @@ true_drc <- function(a, d) {
 #'
 #' Datos simulados para DGP 1-3.
 #'
-#' @param n tamaño muestra
+#' @param n tamano muestra
 #' @param dgp 1, 2 o 3
 #' @param treatment "uniform" o "normal"
 #' @return data.frame con A, W, Y

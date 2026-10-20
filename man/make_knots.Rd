@@ -9,11 +9,11 @@ make_knots(x, n = 10)
 \arguments{
 \item{x}{datos observados}
 
-\item{n}{número de nudos}
+\item{n}{numero de nudos}
 }
 \value{
 vector de nudos
 }
 \description{
-Genera n puntos de anclaje (knots) basados en cuantiles empíricos.
+Genera n puntos de anclaje (knots) basados en cuantiles empiricos.
 }
