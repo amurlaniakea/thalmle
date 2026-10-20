@@ -65,6 +65,12 @@ omega_oracle <- function(a, treatment = c("uniform", "normal")) {
          numeric(1))
 }
 
+#' Data-generating processes (DGP) from the paper (Sec. 7.1, arXiv:2607.03824).
+#' @param n Sample size.
+#' @param dgp DGP index (1, 2, 3). See paper Sec. 7.1. Note: DGP 2 uses
+#'   the assumption-documented reading (not the garbled extracted text).
+#' @param treatment Treatment mechanism ("uniform" or "normal").
+#' @return A data.frame with columns W, A, Y.
 #' @export
 simulate_data <- function(n, dgp = 1, treatment = c("uniform", "normal")) {
   treatment <- match.arg(treatment)
