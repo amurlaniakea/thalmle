@@ -1,0 +1,5 @@
+^LICENSE$
+^experiments$
+^results$
+^.*\.log$
+^\.git$

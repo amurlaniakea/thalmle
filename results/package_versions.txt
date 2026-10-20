@@ -1,0 +1,3 @@
+glmnet 4.1.8 
+hal9001 0.4.6 
+haldensify 0.2.8 

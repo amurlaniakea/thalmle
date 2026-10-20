@@ -1,88 +1,65 @@
-test_that("simulate_data produce estructura correcta", {
-  skip_if_not_installed("testthat")
-  df <- simulate_data(100, dgp = 1, treatment = "uniform")
-  expect_equal(nrow(df), 100)
-  expect_true(all(c("A", "W", "Y") %in% names(df)))
-  expect_true(all(df$A >= 1 & df$A <= 9))
-  expect_true(all(is.finite(df$W)))
-  expect_true(all(is.finite(df$Y)))
+test_that("true_drc matches Monte Carlo of Q0", {
+  set.seed(1)
+  w <- rnorm(2e5)
+  for (d in 1:3) {
+    expect_lt(abs(mean(thalmle:::Q0_dgp(3.7, w, d)) - true_drc(3.7, d)), 0.02)
+  }
 })
 
-test_that("fit_omega_kde devuelve función y evalúa positivamente", {
-  skip_if_not_installed("testthat")
-  A <- rnorm(100) + 3
-  omega <- fit_omega_kde(A)
-  expect_true(is.function(omega))
-  val <- omega(3)
-  expect_true(is.finite(val) && val > 0)
+test_that("truncated normal stays in [0, 10]", {
+  set.seed(2)
+  x <- thalmle:::rtruncnorm01(rnorm(1000, 5, 3), 2, 0, 10)
+  expect_true(all(x >= 0 & x <= 10))
 })
 
-test_that("fit_Q_hal devuelve objeto no nulo con datos simulados", {
-  skip_if_not_installed("testthat")
-  skip_if_not_installed("hal9001")
-  df <- simulate_data(50, dgp = 1, treatment = "uniform")
-  res <- fit_Q_hal(A = df$A, W = df$W, Y = df$Y, smoothness_orders = 0L)
-  expect_false(is.null(res))
-  expect_true("hal9001_fit_stub" %in% class(res) || is.list(res))
-  expect_equal(res$smoothness_orders, 0L)
-})
-
-test_that("spline_basis tiene primera columna constante y dimensiones correctas", {
-  B <- spline_basis(c(1, 2, 3), knots = c(1.5, 2.5), k = 1L)
-  expect_true(all(B[, 1] == 1))
-  expect_equal(dim(B), c(3L, 4L))
-})
-
-test_that("pinv_sym satisface propiedad de pseudo-inversa", {
+test_that("pinv_sym is a generalised inverse on rank-deficient input", {
   set.seed(3)
-  M <- crossprod(matrix(rnorm(15), 3, 5))
-  S <- pinv_sym(M)
-  expect_equal(M %*% S %*% M, M, tolerance = 1e-6)
+  M <- matrix(rnorm(30), 10, 3) %*% matrix(rnorm(15), 3, 5)
+  S <- crossprod(M)
+  expect_equal(S %*% pinv_sym(S) %*% S, S, tolerance = 1e-6)
 })
 
-test_that("select_lambda_by_size respeta rango y devuelve índices correctos", {
+test_that("spline_basis has constant first column and right shape", {
+  B <- spline_basis(c(1, 2, 3), knots = c(1.5, 2.5), k = 1L)
+  expect_equal(dim(B), c(3L, 3L))
+  expect_true(all(B[, 1] == 1))
+})
+
+test_that("size window selector clamps the CV choice", {
   sizes <- c(0, 2, 5, 10, 15, 22, 28, 35, 50)
+  # n = 500, k = 1 -> window [21, 31]
   expect_equal(select_lambda_by_size(sizes, 500, cv_index = 3), 6)
   expect_equal(select_lambda_by_size(sizes, 500, cv_index = 9), 7)
   expect_equal(select_lambda_by_size(sizes, 500, cv_index = 7), 7)
   expect_equal(select_lambda_by_size(sizes, 500), 6)
 })
 
-test_that("thal_core runs end to end con datos simulados", {
-  skip_if_not_installed("testthat")
+test_that("thal_oracle runs end to end (plumbing only)", {
   skip_if_not_installed("glmnet")
-  df <- simulate_data(100, dgp = 1, treatment = "uniform")
-  Qf <- fit_Q_hal(A = df$A, W = df$W, Y = df$Y, smoothness_orders = 0L)
-  gf <- tryCatch({
-    fit_g_haldensify(A = df$A, W = df$W)
-  }, error = function(e) list(predict = function(...) rep(0.5, nrow(df))))
-  om <- fit_omega_kde(df$A)
-  grid <- seq(min(df$A), max(df$A), length.out = 10)
-  res <- thal_core(A = df$A, W = df$W, Y = df$Y,
-                   Qf = Qf, gf = gf, om = om, grid = grid)
-  expect_true(is.list(res))
-  expect_equal(length(res$psi_hat), length(grid))
+  set.seed(4)
+  res <- thal_oracle(n = 300, dgp = 1, treatment = "uniform",
+                     q_init = "misspecified")
+  expect_length(res$psi_hat, 25)
   expect_true(all(is.finite(res$psi_hat)))
-  expect_true(all(is.finite(res$psi_init)))
 })
 
-test_that("w_cap obs_max funciona con pesos iguales (simulado trivial)", {
-  # Escenario trivial: pesos iguales => cap no debe alterar
-  skip_if_not_installed("testthat")
-  A <- rnorm(20) + 3
-  W <- rnorm(20)
-  Y <- A + W + rnorm(20)
-  Qf <- fit_Q_hal(A = A, W = W, Y = Y, smoothness_orders = 0L)
-  gf <- list(predict = function(...) rep(1, length(A)))
-  om <- function(x) rep(1, length(x))
-  grid <- seq(min(A), max(A), length.out = 5)
-  res1 <- thal_core(A, W, Y, Qf, gf, om, grid, w_cap = "obs_max")
-  res2 <- thal_core(A, W, Y, Qf, gf, om, grid, w_cap = Inf)
-  expect_equal(res1$psi_hat, res2$psi_hat, tolerance = 1e-6)
+test_that("targeting removes most of the bias of a misspecified Q (uniform treatment)", {
+  skip_if_not_installed("glmnet")
+  set.seed(10)
+  r <- thal_oracle(n = 500, dgp = 1, treatment = "uniform", q_init = "misspecified")
+  expect_lt(mean(abs(r$psi_hat - r$truth)), 0.5 * mean(abs(r$psi_init - r$truth)))
 })
 
-test_that("true_drc da valores finitos para dgp 1 y 2", {
-  skip_if_not_installed("testthat")
-  expect_true(is.finite(true_drc(4, 1)))
-  expect_true(is.finite(true_drc(6, 2)))
+test_that("w_cap = Inf and 'obs_max' are no-ops when every weight equals 1", {
+  skip_if_not_installed("glmnet")
+  set.seed(10)
+  r0 <- thal_oracle(n = 300, dgp = 1, treatment = "uniform", q_init = "misspecified")
+  set.seed(10)
+  r1 <- thal_oracle(n = 300, dgp = 1, treatment = "uniform", q_init = "misspecified",
+                    w_cap = Inf)
+  set.seed(10)
+  r2 <- thal_oracle(n = 300, dgp = 1, treatment = "uniform", q_init = "misspecified",
+                    w_cap = "obs_max")
+  expect_equal(r0$psi_hat, r1$psi_hat, tolerance = 1e-8)
+  expect_equal(r0$psi_hat, r2$psi_hat, tolerance = 1e-8)
 })

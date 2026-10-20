@@ -1,0 +1,84 @@
+
+===== replica 19 (178 s) =====
+reproduccion: max |nuevo - guardado| = 0.00e+00
+RMSE: HAL 0.889 | plug-in dirigido 9.484 | T-HAL 7.645
+observaciones con A<2: 58, A>8: 45 | rango de A: 0.01 a 9.89
+pesos omega/g: observados max 8.8 | contrafactuales a=1 max 8.4 | a=9 max 46.2 (limite 103)
+targeting: tamano 30, tamano CV sin recortar 30, max|eps| = 44.5
+  j nudo     eps
+ 50 9.02  44.500
+ 49 8.65 -12.800
+ 47 7.93  -2.020
+ 48 8.30  -1.660
+ 45 7.42   1.640
+  1   NA  -0.352
+ 24 4.71  -0.251
+ 36 6.05  -0.238
+error por dosis:
+                 a=1  a=3   a=5   a=7    a=9
+HAL             0.72 0.19 -0.61 -0.60  -1.26
+plugin_dirigido 0.28 0.17 -0.55 -1.31 -45.98
+THAL            0.39 0.10 -0.39 -1.17 -36.33
+
+===== replica 20 (358 s) =====
+reproduccion: max |nuevo - guardado| = 0.00e+00
+RMSE: HAL 0.776 | plug-in dirigido 2.901 | T-HAL 2.771
+observaciones con A<2: 33, A>8: 56 | rango de A: 0.04 a 9.90
+pesos omega/g: observados max 5.8 | contrafactuales a=1 max 4.9 | a=9 max 65.1 (limite 103)
+targeting: tamano 31, tamano CV sin recortar 31, max|eps| = 30.1
+  j nudo     eps
+ 50 9.04  30.100
+ 51 9.53  20.100
+ 48 8.67 -11.800
+ 49 8.87  -3.370
+ 42 7.23   2.450
+ 40 6.93  -1.500
+  4 1.60   1.110
+ 43 7.36  -0.882
+error por dosis:
+                 a=1   a=3   a=5   a=7    a=9
+HAL             2.13 -0.84  0.04 -0.21   1.64
+plugin_dirigido 2.21 -0.79  0.12 -0.23 -13.42
+THAL            1.63 -0.91 -0.24 -0.32 -12.93
+
+===== replica 14 (185 s) =====
+reproduccion: max |nuevo - guardado| = 0.00e+00
+RMSE: HAL 0.581 | plug-in dirigido 1.440 | T-HAL 1.179
+observaciones con A<2: 51, A>8: 54 | rango de A: 0.12 a 9.95
+pesos omega/g: observados max 5.1 | contrafactuales a=1 max 12.0 | a=9 max 18.8 (limite 103)
+targeting: tamano 21, tamano CV sin recortar 20, max|eps| = 26.8
+  j nudo     eps
+ 50 9.05 26.8000
+ 48 8.34 -3.2600
+ 49 8.67 -1.6500
+ 42 7.04  0.5820
+ 43 7.28 -0.4290
+ 30 5.42 -0.1130
+  1   NA -0.1020
+  3 1.03  0.0561
+error por dosis:
+                 a=1   a=3   a=5   a=7   a=9
+HAL             0.59 -0.24  0.12  0.26  1.92
+plugin_dirigido 0.28 -0.34  0.18 -0.05 -5.50
+THAL            1.21 -0.43 -0.13 -0.49 -3.54
+
+===== replica 1 (178 s) =====
+reproduccion: max |nuevo - guardado| = 0.00e+00
+RMSE: HAL 0.743 | plug-in dirigido 1.098 | T-HAL 0.586
+observaciones con A<2: 59, A>8: 51 | rango de A: 0.06 a 9.88
+pesos omega/g: observados max 5.7 | contrafactuales a=1 max 6.3 | a=9 max 41.9 (limite 103)
+targeting: tamano 21, tamano CV sin recortar 0, max|eps| = 2.45
+  j nudo    eps
+ 50 9.36  2.450
+ 49 8.79  1.660
+  6 1.77 -0.513
+  3 0.81  0.450
+  1   NA -0.328
+ 41 6.94 -0.319
+ 44 7.49  0.273
+ 30 5.49 -0.148
+error por dosis:
+                  a=1  a=3   a=5  a=7  a=9
+HAL             -0.31 0.34 -0.04 0.65 3.18
+plugin_dirigido -0.82 0.34  0.02 0.43 3.37
+THAL            -0.28 0.16 -0.06 0.45 0.46

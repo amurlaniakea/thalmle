@@ -1,151 +1,158 @@
-# SPDX-FileCopyrightText: 2026 Pedro Sordo Martínez <amurlaniakea@gmail.com>
-#
+# Copyright (C) 2026 Pedro Sordo Martínez
 # SPDX-License-Identifier: AGPL-3.0-or-later
-#
-# Copyright (C) 2026 Pedro Sordo Martinez
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as
-# published by the Free Software Foundation, either version 3 of the
-# License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public
-# License along with this program. If not, see
-# <https://www.gnu.org/licenses/>.
 
-#' thal_core
+#' T-HAL-MLE core (Algorithm 1, steps 3-8), continuous outcome, scalar W.
 #'
-#' Nucleo del targeting LASSO para T-HAL-MLE (pasos 3-5 del algoritmo).
+#' The initial fits are passed in as functions so the core can be tested
+#' without hal9001/haldensify:
+#'   Q_fun(a, w): initial estimate of E[Y | A = a, W = w] (vectorised pairwise)
+#'   g_fun(a, w): estimate of the conditional density g(a | w)
+#'   omega_fun(a): estimate of the marginal density of A
+#'   fit_Q(A, W, Y): optional; refits the outcome regression on a subsample and
+#'     returns a function (a, w) -> Q. Needed for honest CV and for cross-fitting.
 #'
-#' @param A dosis
-#' @param W covariables
-#' @param Y resultado
-#' @param Qf objeto Q con metodo predict
-#' @param gf objeto densidad condicional con predict
-#' @param om densidad marginal (funcion de evaluacion)
-#' @param grid puntos de evaluacion de la curva
-#' @param n_proj tamano de proyeccion (por defecto length(A))
-#' @param w_cap "obs_max" o numerico (por defecto "obs_max")
-#' @param n_knots numero de nudos para base spline (50L)
-#' @return lista con psi_hat, psi_init, size, lambda
+#' Options:
+#'   * fit_Q given, crossfit = FALSE, use_cv = TRUE: honest V-fold CV for the
+#'     targeting penalty (Q refitted on each training split; paper Sec. 5.1).
+#'   * crossfit = TRUE (requires fit_Q): the offset of the targeting regression is
+#'     the OUT-OF-FOLD prediction of Q (K = cf_folds folds), so the residuals Y - Q
+#'     are true residuals. cf_plugin = "avg": the plug-in marginal uses the average
+#'     of the fold-specific Q fits; "full": it uses the full-sample Q_fun. The
+#'     penalty is then chosen with cv.glmnet on those out-of-fold offsets.
+#'   * Neither: cv.glmnet reuses the in-sample Q (not honest).
+#'
+#' Deviations from the paper to review:
+#'   * the OLS projection (step 7) uses at most `n_proj` dose points;
+#'   * the clever covariate is omega(a)/g(a|W) * phi(a), WITHOUT Sigma^+
+#'     (the paper uses Sigma^{-1} phi); the selected working model is phi_j for
+#'     nonzero eps_j;
+#'   * g and omega are always the ones fitted on the full sample.
+#' @param w_cap Cap for counterfactual weights omega/g. NULL uses sqrt(n)*log(n/5). Inf disables.
 #' @export
-thal_core <- function(A, W, Y, Qf, gf, om, grid,
-                      n_proj = length(A), w_cap = "obs_max", n_knots = 50L) {
-  # TODO: Verificar detalles exactos con la Seccion 7 del preprint arXiv:2607.03824.
-  # Manejo seguro de division por cero
-  epsilon <- 1e-8
-
-  # Paso A: Pesos crudos
-  omega_A <- as.vector(om(A))
-  # Si om no tiene predict, asumimos que es una funcion que acepta A
-  g_pred <- tryCatch({
-    predict(gf, newdata = data.frame(A = A, W = if (is.data.frame(W)) W else data.frame(W = W)), trim = FALSE)
-  }, error = function(e) {
-    # Si gf no tiene predict funcional, usar aproximacion simple
-    rep(0.5, length(A))
-  })
-  g_AW <- pmax(as.vector(g_pred), epsilon, na.rm = TRUE)
-  w_raw <- omega_A / g_AW
-
-  # Paso B: Capping
-  if (w_cap == "obs_max") {
-    cap_val <- max(w_raw, na.rm = TRUE)
-  } else {
-    cap_val <- as.numeric(w_cap)
-  }
-  w_capped <- pmin(w_raw, cap_val, na.rm = TRUE)
-
-  # Paso C: Clever Covariate
-  knots <- make_knots(A, n = n_knots)
-  Phi_A <- spline_basis(A, knots = knots, k = 1L)
-  H <- w_capped * Phi_A  # multiplicacion elemento-a-elemento por columna
-
-  # Paso D: Offset (prediccion de Qf)
-  offset_val <- tryCatch({
-    as.vector(Qf$predict(newdata = data.frame(A = A, W = if (is.data.frame(W)) W else data.frame(W = W))))
-  }, error = function(e) {
-    # Fallback a media de Y si Qf no predice
-    rep(mean(Y, na.rm = TRUE), length(Y))
-  })
-
-  # Paso E: LASSO Targeting
-  # Nota: intercept = FALSE segun instrucciones; standardize = FALSE para mantener escala de H.
-  if (requireNamespace("glmnet", quietly = TRUE)) {
-    fit_glmnet <- glmnet::glmnet(x = as.matrix(H), y = Y, offset = offset_val,
-                                  intercept = FALSE, standardize = FALSE, alpha = 1)
-    # Paso F: Seleccion de lambda
-    df_sizes <- as.numeric(fit_glmnet$df)
-    # Asegurar que no haya NA
-    df_sizes <- ifelse(is.na(df_sizes), 0, df_sizes)
-    opt_idx <- select_lambda_by_size(sizes = df_sizes, n = length(A))
-    lambda_opt <- fit_glmnet$lambda[opt_idx]
-    # Paso G: Marginalizacion y Proyeccion
-    # Proyeccion inicial simplificada pero funcional
-    psi_init <- sapply(grid, function(a) {
-      tryCatch({
-        mean(as.vector(Qf$predict(newdata = data.frame(A = a, W = data.frame(W = W[1:min(length(Y), 1)])))), na.rm = TRUE)
-      }, error = function(e) mean(Y, na.rm = TRUE))
+thal_core <- function(A, W, Y, Q_fun, g_fun, omega_fun, grid,
+                      k = 1L, n_knots = 50L, c1 = 6, c2 = 9,
+                      use_cv = TRUE, n_proj = 200L, nlambda = 100L, w_cap = NULL,
+                      fit_Q = NULL, cv_folds = 5L,
+                      crossfit = FALSE, cf_folds = 2L, cf_plugin = c("avg", "full"),
+                      sigma_tol = NULL) {
+  cf_plugin <- match.arg(cf_plugin)
+  n <- length(A)
+  cap <- if (is.null(w_cap)) sqrt(n) * log(n / 5) else if (identical(w_cap, "obs_max")) max(omega_fun(A) / g_fun(A, W)) else as.numeric(w_cap)
+  knots <- make_knots(A, n_knots)
+  Phi_A <- spline_basis(A, knots, k)
+  wA <- pmin(omega_fun(A) / g_fun(A, W), cap)
+  Sp <- if (is.null(sigma_tol)) NULL else pinv_sym(crossprod(Phi_A) / n, tol = sigma_tol)
+  H <- wA * (if (is.null(Sp)) Phi_A else Phi_A %*% Sp)
+  offset <- Q_fun(A, W)
+  Q_use <- Q_fun
+  if (crossfit) {
+    if (is.null(fit_Q)) stop("crossfit = TRUE requires fit_Q")
+    fid <- sample(rep_len(seq_len(cf_folds), n))
+    Qcf <- lapply(seq_len(cf_folds), function(v) {
+      tr <- which(fid != v)
+      fit_Q(A[tr], W[tr], Y[tr])
     })
-    # Proyeccion final con coeficientes del lambda seleccionado
-    coef_opt <- as.vector(coef(fit_glmnet, s = lambda_opt))[-1]  # excluir intercepto
-    # Si coef_opt es vacio o NA, reemplazar con 0
-    if (length(coef_opt) == 0 || all(is.na(coef_opt))) coef_opt <- rep(0, ncol(Phi_A))
-    # Evaluar base para grid
-    Phi_grid <- spline_basis(grid, knots = knots, k = 1L)
-    proj_term <- as.vector(Phi_grid %*% matrix(coef_opt, ncol = 1))
-    psi_hat <- psi_init + proj_term
-    psi_hat <- pmax(psi_hat, 0, na.rm = TRUE)  # restriccion no negativa basica
-    # Retorno
-    list(
-      psi_hat = psi_hat,
-      psi_init = psi_init,
-      size = df_sizes[opt_idx],
-      lambda = lambda_opt,
-      w_raw = w_raw,
-      w_capped = w_capped,
-      knots = knots
-    )
-  } else {
-    # Si glmnet no esta disponible, devolver stub funcional pero limitado
-    stop("thal_core requiere glmnet (no instalado); fallback no implementado completamente")
+    offset <- numeric(n)
+    for (v in seq_len(cf_folds)) {
+      va <- which(fid == v)
+      offset[va] <- Qcf[[v]](A[va], W[va])
+    }
+    if (cf_plugin == "avg") {
+      Q_use <- function(a, w) Reduce(`+`, lapply(Qcf, function(f) f(a, w))) / cf_folds
+    }
   }
+
+  fit <- glmnet::glmnet(H, Y, family = "gaussian", offset = offset,
+                        intercept = FALSE, standardize = FALSE,
+                        nlambda = nlambda)
+  sizes <- fit$df
+  cv_index <- NULL
+  if (use_cv) {
+    if (is.null(fit_Q) || crossfit) {
+      cvfit <- glmnet::cv.glmnet(H, Y, family = "gaussian", offset = offset,
+                                 intercept = FALSE, standardize = FALSE,
+                                 lambda = fit$lambda)
+      cv_index <- which.min(cvfit$cvm)
+    } else {
+      lam <- fit$lambda
+      folds <- sample(rep_len(seq_len(cv_folds), n))
+      risk <- matrix(NA_real_, cv_folds, length(lam))
+      for (v in seq_len(cv_folds)) {
+        tr <- which(folds != v); va <- which(folds == v)
+        Qv <- fit_Q(A[tr], W[tr], Y[tr])
+        fv <- glmnet::glmnet(H[tr, , drop = FALSE], Y[tr], family = "gaussian",
+                             offset = Qv(A[tr], W[tr]), intercept = FALSE,
+                             standardize = FALSE, lambda = lam)
+        pv <- predict(fv, newx = H[va, , drop = FALSE], s = lam,
+                      newoffset = Qv(A[va], W[va]))
+        risk[v, ] <- colMeans((Y[va] - pv)^2)
+      }
+      cv_index <- which.min(colMeans(risk))
+    }
+  }
+  cv_size <- if (is.null(cv_index)) NA_integer_ else as.integer(sizes[cv_index])
+  idx <- select_lambda_by_size(sizes, n, k, c1, c2, cv_index)
+  eps <- as.numeric(fit$beta[, idx])
+
+  # targeted plug-in marginal: mean_i Q*(a, W_i)
+  marginal <- function(points) {
+    m <- length(points)
+    a_rep <- rep(points, each = n)
+    w_rep <- rep(W, times = m)
+    Qb <- matrix(Q_use(a_rep, w_rep), n, m)
+    gb <- matrix(g_fun(a_rep, w_rep), n, m)
+    Pm <- spline_basis(points, knots, k)
+    if (!is.null(Sp)) Pm <- Pm %*% Sp
+    corr <- as.numeric(Pm %*% eps)
+    Wmat <- pmin(sweep(1 / gb, 2, omega_fun(points), "*"), cap)
+    Qstar <- Qb + sweep(Wmat, 2, corr, "*")
+    colMeans(Qstar)
+  }
+
+  # baseline: plug-in of the full-sample Q (no targeting, no cross-fitting)
+  psi_init <- colMeans(matrix(Q_fun(rep(grid, each = n), rep(W, times = length(grid))),
+                              n, length(grid)))
+  psi_plugin <- marginal(grid)
+  sel <- which(eps != 0)
+  if (length(sel) == 0L) {
+    warning("targeting step selected no basis functions; returning plug-in")
+    return(list(psi_hat = psi_plugin, psi_plugin = psi_plugin, psi_init = psi_init,
+                grid = grid, eps = eps, selected = sel, size = 0L,
+                cv_size = cv_size, lambda = fit$lambda[idx]))
+  }
+
+  # step 7: OLS projection of the plug-in onto the selected basis
+  proj_pts <- if (n > n_proj) {
+    unique(quantile(A, probs = seq(0, 1, length.out = n_proj), names = FALSE))
+  } else sort(A)
+  Phi_p <- spline_basis(proj_pts, knots, k)[, sel, drop = FALSE]
+  alpha <- pinv_sym(crossprod(Phi_p)) %*% crossprod(Phi_p, marginal(proj_pts))
+  psi_hat <- as.numeric(spline_basis(grid, knots, k)[, sel, drop = FALSE] %*% alpha)
+
+  list(psi_hat = psi_hat, psi_plugin = psi_plugin, psi_init = psi_init, grid = grid,
+       eps = eps, selected = sel, size = length(sel), cv_size = cv_size,
+       lambda = fit$lambda[idx])
 }
 
-#' thal_oracle
-#'
-#' Wrapper de referencia: simula datos, ajusta modelos y ejecuta thal_core.
-#'
-#' @param n tamano muestra (300)
-#' @param dgp DGP (1)
-#' @param treatment tipo de tratamiento ("uniform")
-#' @param q_init tipo inicializacion Q ("misspecified")
-#' @param ... argumentos adicionales para thal_core
-#' @return lista con resultados del pipeline
+#' Plumbing check on the paper's simulated DGPs with oracle nuisances.
+#' q_init = "misspecified" ignores W in the initial Q, so the plug-in is
+#' biased and the targeting step has something to correct.
+#' @param w_cap Cap for counterfactual weights omega/g. NULL uses sqrt(n)*log(n/5). Inf disables.
 #' @export
-thal_oracle <- function(n = 300, dgp = 1, treatment = "uniform",
-                        q_init = "misspecified", ...) {
-  df <- simulate_data(n, dgp, treatment)
-  Qf <- fit_Q_hal(A = df$A, W = df$W, Y = df$Y, smoothness_orders = 0L)
-  gf <- tryCatch({
-    fit_g_haldensify(A = df$A, W = df$W)
-  }, error = function(e) {
-    # Si haldensify no esta disponible, devolver stub funcional basico
-    list(predict = function(...) rep(0.5, n))
-  })
-  om <- fit_omega_kde(df$A)
-  grid <- seq(min(df$A), max(df$A), length.out = 25)
-  res <- thal_core(A = df$A, W = df$W, Y = df$Y,
-                   Qf = Qf, gf = gf, om = om, grid = grid, ...)
-  list(
-    psi_hat = res$psi_hat,
-    psi_init = res$psi_init,
-    size = res$size,
-    dgp = dgp,
-    treatment = treatment
-  )
+thal_oracle <- function(n = 500, dgp = 1, treatment = "uniform",
+                        q_init = c("oracle", "misspecified"), k = 1L,
+                        grid = seq(1, 9, length.out = 25), ...) {
+  q_init <- match.arg(q_init)
+  d <- simulate_data(n, dgp, treatment)
+  Q_fun <- if (q_init == "oracle") {
+    function(a, w) Q0_dgp(a, w, dgp)
+  } else {
+    function(a, w) 3 * sin(1.5 * a) + 0.5 * a
+  }
+  res <- thal_core(d$A, d$W, d$Y, Q_fun,
+                   g_fun = function(a, w) g0_dgp(a, w, treatment),
+                   omega_fun = function(a) omega_oracle(a, treatment),
+                   grid = grid, k = k, ...)
+  res$truth <- true_drc(grid, dgp)
+  res
 }

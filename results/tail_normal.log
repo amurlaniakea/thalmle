@@ -1,0 +1,29 @@
+nohup: no se tendrá en cuenta la entrada
+rep 1: 205 s
+rep 2: 225 s
+rep 3: 212 s
+rep 4: 210 s
+rep 5: 195 s
+rep 6: 297 s
+rep 7: 398 s
+rep 8: 393 s
+rep 9: 386 s
+rep 10: 382 s
+rep 11: 381 s
+rep 12: 197 s
+rep 13: 223 s
+rep 14: 217 s
+rep 15: 226 s
+rep 16: 215 s
+rep 17: 222 s
+rep 18: 225 s
+rep 19: 224 s
+rep 20: 231 s
+cfg: trt=normal n=500 n_proj=500 replicas validas=20 de 20, tiempo medio 263 s
+HAL plug-in (sin targeting) mean|bias| = 0.2104  RMSE = 0.7140  (centro 0.4462, colas 0.9199)
+T-HAL base                 mean|bias| = 0.2450  RMSE = 0.9787  (centro 0.3073, colas 1.3759)
+T-HAL cap30                mean|bias| = 0.2219  RMSE = 0.8831  (centro 0.3074, colas 1.2338)
+T-HAL cap10                mean|bias| = 0.1917  RMSE = 0.7859  (centro 0.3077, colas 1.0883)
+T-HAL c1_0                 mean|bias| = 0.2051  RMSE = 0.8601  (centro 0.4299, colas 1.1581)
+T-HAL g_true               mean|bias| = 0.2810  RMSE = 1.3959  (centro 0.3097, colas 1.9889)
+mediana del tamano: base 21  cap30 21  cap10 21  c1_0 0  g_true 22 
