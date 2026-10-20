@@ -3,6 +3,8 @@
 **Experimental, unofficial R implementation of the Targeted HAL-MLE (T-HAL-MLE)
 for a continuous-dose dose-response curve.**
 
+> **⚠️ ADVERTENCIA:** Ver `DISCLAIMER.md` antes de usar. Código de investigación; no validado contra el preprint; `w_cap` es heurística no incluida en el artículo.
+
 > **Status: research code.** Point estimates only (no confidence intervals).
 > It is *not* validated against the preprint: with uniform treatment it behaves
 > as the preprint describes; with normal treatment it does so only in some
