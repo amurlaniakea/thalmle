@@ -10,7 +10,7 @@
 g_fun_dgp <- function(w, dgp) {
   switch(as.character(dgp),
     "1" = 5 * (w > 0),
-    "2" = 4 * (w > -1) - (w > 0) + (w > 1),
+    "2" = 4 * ((w > -1) - (w > 0) + (w > 1)),
     "3" = 3 * sin(7 * pi * w),
     stop("dgp must be 1, 2 or 3"))
 }
@@ -24,7 +24,7 @@ Q0_dgp <- function(a, w, dgp) {
 Eg_dgp <- function(dgp) {
   switch(as.character(dgp),
     "1" = 5 * 0.5,
-    "2" = 4 * pnorm(1) - 0.5 + (1 - pnorm(1)),
+    "2" = 2,
     "3" = 0,
     stop("dgp must be 1, 2 or 3"))
 }

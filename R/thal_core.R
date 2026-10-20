@@ -37,6 +37,8 @@ thal_core <- function(A, W, Y, Q_fun, g_fun, omega_fun, grid,
                       sigma_tol = NULL) {
   cf_plugin <- match.arg(cf_plugin)
   n <- length(A)
+  if (any(grid < min(A, na.rm = TRUE) | grid > max(A, na.rm = TRUE)))
+    warning("grid contains values outside range(A); extrapolation will occur without warning.")
   cap <- if (is.null(w_cap)) sqrt(n) * log(n / 5) else if (identical(w_cap, "obs_max")) max(omega_fun(A) / g_fun(A, W)) else as.numeric(w_cap)
   knots <- make_knots(A, n_knots)
   Phi_A <- spline_basis(A, knots, k)
