@@ -46,7 +46,7 @@ continuous outcome `Y`) it estimates `psi(a) = E_W[ E(Y | A = a, W) ]`:
 
 ```r
 # install.packages(c("glmnet", "hal9001", "haldensify"))
-# R CMD INSTALL thalmle_0.0.2.tar.gz
+# R CMD INSTALL thalmle_0.0.3.tar.gz
 library(thalmle)
 set.seed(1)
 d    <- simulate_data(500, dgp = 1, treatment = "normal")
