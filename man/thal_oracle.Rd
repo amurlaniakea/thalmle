@@ -2,30 +2,40 @@
 % Please edit documentation in R/thal_core.R
 \name{thal_oracle}
 \alias{thal_oracle}
-\title{thal_oracle}
+\title{Plumbing check on the paper's simulated DGPs with oracle nuisances.
+q_init = "misspecified" ignores W in the initial Q, so the plug-in is
+biased and the targeting step has something to correct.}
 \usage{
 thal_oracle(
-  n = 300,
+  n = 500,
   dgp = 1,
   treatment = "uniform",
-  q_init = "misspecified",
+  q_init = c("oracle", "misspecified"),
+  k = 1L,
+  grid = seq(1, 9, length.out = 25),
   ...
 )
 }
 \arguments{
-\item{n}{tamano muestra (300)}
+\item{n}{sample size.}
 
-\item{dgp}{DGP (1)}
+\item{dgp}{1, 2 or 3.}
 
-\item{treatment}{tipo de tratamiento ("uniform")}
+\item{treatment}{"uniform" or "normal".}
 
-\item{q_init}{tipo inicializacion Q ("misspecified")}
+\item{q_init}{"oracle" or "misspecified" initial outcome regression.}
 
-\item{...}{argumentos adicionales para thal_core}
+\item{k}{smoothness order of the spline basis.}
+
+\item{grid}{doses at which the curve is evaluated.}
+
+\item{...}{further arguments passed to thal_core().}
 }
 \value{
-lista con resultados del pipeline
+the output of thal_core() plus `truth`, the true curve on the grid.
 }
 \description{
-Wrapper de referencia: simula datos, ajusta modelos y ejecuta thal_core.
+Plumbing check on the paper's simulated DGPs with oracle nuisances.
+q_init = "misspecified" ignores W in the initial Q, so the plug-in is
+biased and the targeting step has something to correct.
 }

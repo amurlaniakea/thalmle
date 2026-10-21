@@ -70,6 +70,12 @@ Metric: for each replicate, the RMSE over 25 doses in [1, 9]; we report the
 **paired difference T-HAL minus HAL plug-in** (negative = T-HAL better) with its
 standard error. Samples have 20-30 replicates (the preprint uses 1,000).
 
+> **DGP 2 caveat.** The DGP 2 figures below (and the `*dgp2*` files in
+> `results/`) were produced with `g(w) = 4 1[w > -1] - 1[w > 0] + 1[w > 1]`,
+> an earlier reading that is not the preprint's `g(w) = 4 (1[w > -1] - 1[w > 0] +
+> 1[w > 1])`. The code now uses the preprint's DGP 2; these figures have not been
+> re-run and should not be quoted as DGP 2 of the preprint. DGP 1 is unaffected.
+
 **Uniform treatment, DGP 1, default configuration** (four independent samples of 20):
 -0.194 (SE 0.019), -0.162 (0.014), -0.101 (0.023), -0.183 (0.020).
 T-HAL is better in 75 of 80 replicates.
@@ -123,8 +129,25 @@ should not be used as a default.
 | projection on selected `phi_j` | least squares on all observed doses | as described |
 | evaluation | 20-30 replicates, pooled and paired summaries | preprint: 1,000 replicates |
 
-Open questions for the authors are in `experiments/` (see the e-mail draft in the
-repository history, if included).
+Details the preprint does not specify (HAL settings, basis size and knots, `haldensify`
+options, tolerance of the pseudo-inverse) are open questions that remain to be
+clarified with the authors.
+
+## Defaults and the settings used in the experiments
+
+| setting | package default | used in the experiments |
+|---|---|---|
+| `w_cap` (counterfactual weights) | `NULL`: cap `sqrt(n) log(n/5)` as in the preprint | default, `"obs_max"`, 10 or 5 (see Evidence) |
+| `n_proj` (doses used by the projection) | 200 | 500, i.e. all observed doses (`n_proj = length(A)`) |
+| outcome HAL order (`smoothness_orders`, or `THAL_QSO`) | 1 | 0 |
+| `n_knots`, `c1`, `c2`, `k` | 50, 6, 9, 1 | same |
+| `fit_g_haldensify()` | 10 bins, `max_degree = 2`, `trim = FALSE` | same |
+| penalty | CV clipped to the window | same |
+
+With uniform treatment `w_cap` has no effect (all weights are 1). With normal
+treatment the default `w_cap` is the unreliable configuration (see Evidence);
+`"obs_max"` is experimental. A projection on only 25 doses was clearly worse
+(pooled RMSE 0.760 against 0.380 with all doses, uniform treatment).
 
 ## Reproducing the experiments
 
@@ -134,6 +157,11 @@ repository history, if included).
   `results/`. Most scripts take the package directory as first argument and were
   run with `THAL_QSO=0` (order of the outcome HAL) from the parent directory.
 * One replicate takes 3-6 minutes (the `haldensify` fit dominates).
+* The logs in `results/` are the record of what was run. Some scripts were run against
+  earlier development copies of the package (not included here) and hard-code those
+  directory names, so they may need small edits to run against this tree. Early scripts
+  also depend on the order in which random numbers are consumed, so rerunning them with a
+  different package version can give different samples.
 
 ## Known issues / TODO
 
@@ -142,6 +170,7 @@ repository history, if included).
 * `predict.haldensify()` trims predicted densities at a floor that, according to
   the package NEWS, depends on the number of rows predicted; we saw
   batch-dependent outputs. We always call it with `trim = FALSE`.
+* DGP 2 figures predate the fix to the DGP (see the caveat under Evidence) and need to be re-run.
 * Influence-curve variance and confidence intervals are not implemented.
 * The experiments live in the package tree for traceability; they are excluded
   from the built package (`.Rbuildignore`).

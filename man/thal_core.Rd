@@ -2,45 +2,92 @@
 % Please edit documentation in R/thal_core.R
 \name{thal_core}
 \alias{thal_core}
-\title{thal_core}
+\title{T-HAL-MLE core (Algorithm 1, steps 3-8), continuous outcome, scalar W.}
 \usage{
 thal_core(
   A,
   W,
   Y,
-  Qf,
-  gf,
-  om,
+  Q_fun,
+  g_fun,
+  omega_fun,
   grid,
-  n_proj = length(A),
-  w_cap = "obs_max",
-  n_knots = 50L
+  k = 1L,
+  n_knots = 50L,
+  c1 = 6,
+  c2 = 9,
+  use_cv = TRUE,
+  n_proj = 200L,
+  nlambda = 100L,
+  w_cap = NULL,
+  fit_Q = NULL,
+  cv_folds = 5L,
+  crossfit = FALSE,
+  cf_folds = 2L,
+  cf_plugin = c("avg", "full"),
+  sigma_tol = NULL
 )
 }
 \arguments{
-\item{A}{dosis}
+\item{A, W, Y}{observed dose, covariate and outcome (vectors of length n).}
 
-\item{W}{covariables}
+\item{Q_fun, g_fun, omega_fun}{fitted nuisance functions, see Details.}
 
-\item{Y}{resultado}
+\item{grid}{doses at which the curve is evaluated.}
 
-\item{Qf}{objeto Q con metodo predict}
+\item{k}{smoothness order of the spline basis for the target function.}
 
-\item{gf}{objeto densidad condicional con predict}
+\item{n_knots}{number of knots of the working basis.}
 
-\item{om}{densidad marginal (funcion de evaluacion)}
+\item{c1, c2}{constants of the working-model size window.}
 
-\item{grid}{puntos de evaluacion de la curva}
+\item{use_cv}{if TRUE the penalty is chosen by cross-validation and clamped to the window.}
 
-\item{n_proj}{tamano de proyeccion (por defecto length(A))}
+\item{n_proj}{maximum number of dose points used by the OLS projection.}
 
-\item{w_cap}{"obs_max" o numerico (por defecto "obs_max")}
+\item{nlambda}{length of the lambda path.}
 
-\item{n_knots}{numero de nudos para base spline (50L)}
+\item{w_cap}{Cap for counterfactual weights omega/g. NULL uses sqrt(n)*log(n/5). Inf disables.}
+
+\item{fit_Q}{optional function (A, W, Y) -> Q_fun used for honest CV and cross-fitting.}
+
+\item{cv_folds}{number of folds of the honest CV.}
+
+\item{crossfit}{if TRUE the offset is the out-of-fold prediction of Q.}
+
+\item{cf_folds}{number of cross-fitting folds.}
+
+\item{cf_plugin}{"avg" or "full", see Details.}
+
+\item{sigma_tol}{if not NULL, tolerance of the pseudo-inverse of Sigma in the clever covariate.}
 }
 \value{
-lista con psi_hat, psi_init, size, lambda
+a list with psi_hat, psi_plugin, psi_init, grid, eps, selected, size, cv_size and lambda.
 }
 \description{
-Nucleo del targeting LASSO para T-HAL-MLE (pasos 3-5 del algoritmo).
+The initial fits are passed in as functions so the core can be tested
+without hal9001/haldensify:
+  Q_fun(a, w): initial estimate of E[Y | A = a, W = w] (vectorised pairwise)
+  g_fun(a, w): estimate of the conditional density g(a | w)
+  omega_fun(a): estimate of the marginal density of A
+  fit_Q(A, W, Y): optional; refits the outcome regression on a subsample and
+    returns a function (a, w) -> Q. Needed for honest CV and for cross-fitting.
+}
+\details{
+Options:
+  * fit_Q given, crossfit = FALSE, use_cv = TRUE: honest V-fold CV for the
+    targeting penalty (Q refitted on each training split; paper Sec. 5.1).
+  * crossfit = TRUE (requires fit_Q): the offset of the targeting regression is
+    the OUT-OF-FOLD prediction of Q (K = cf_folds folds), so the residuals Y - Q
+    are true residuals. cf_plugin = "avg": the plug-in marginal uses the average
+    of the fold-specific Q fits; "full": it uses the full-sample Q_fun. The
+    penalty is then chosen with cv.glmnet on those out-of-fold offsets.
+  * Neither: cv.glmnet reuses the in-sample Q (not honest).
+
+Deviations from the paper to review:
+  * the OLS projection (step 7) uses at most `n_proj` dose points;
+  * the clever covariate is omega(a)/g(a|W) * phi(a), WITHOUT Sigma^+
+    (the paper uses Sigma^{-1} phi); the selected working model is phi_j for
+    nonzero eps_j;
+  * g and omega are always the ones fitted on the full sample.
 }

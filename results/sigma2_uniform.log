@@ -1,0 +1,41 @@
+nohup: no se tendrá en cuenta la entrada
+diag rep1: 50 nudos (N=51) autovalores de Sigma max 395 min 9.01e-06 | rango con tol 1e-10/1e-8/1e-6/1e-4: 51/51/19/7
+diag rep1: 500 nudos (N=501) autovalores de Sigma max 3.89e+03 min -5.43e-14 | rango con tol 1e-10/1e-8/1e-6/1e-4: 173/61/19/6
+diag rep1: pesos omega/g en observados: max 1.4 p99 1.2
+diag rep1: pesos contrafactuales a=1: max 1.0 p99 1.0
+diag rep1: pesos contrafactuales a=5: max 1.4 p99 1.2
+diag rep1: pesos contrafactuales a=9: max 0.9 p99 0.9
+rep 1: 441 s
+rep 2: 376 s
+rep 3: 369 s
+rep 4: 376 s
+rep 5: 431 s
+rep 6: 393 s
+rep 7: 407 s
+rep 8: 410 s
+rep 9: 496 s
+rep 10: 392 s
+rep 11: 374 s
+rep 12: 396 s
+rep 13: 422 s
+rep 14: 412 s
+rep 15: 395 s
+rep 16: 398 s
+rep 17: 436 s
+rep 18: 414 s
+rep 19: 399 s
+rep 20: 274 s
+cfg: trt=uniform n=500 n_proj=500 replicas validas=20 de 20, tiempo medio 401 s
+HAL plug-in (sin targeting) mean|bias| = 0.1548  RMSE = 0.6198  (centro 0.5359, colas 0.6994)
+T-HAL k50_sinSigma         mean|bias| = 0.0822  RMSE = 0.5278  (centro 0.4013, colas 0.6372)
+   pareado vs HAL: -0.101 (EE 0.023) | mejor 16, empate 0, peor 4 de 20 | tam. mediana 21.5 | tam. CV sin recortar, mediana 0
+T-HAL k50_tol1e_10         mean|bias| = 0.1291  RMSE = 0.6188  (centro 0.4050, colas 0.7875)
+   pareado vs HAL: -0.003 (EE 0.036) | mejor 10, empate 0, peor 10 de 20 | tam. mediana 21 | tam. CV sin recortar, mediana 0
+T-HAL k50_tol1e_6          mean|bias| = 0.1510  RMSE = 0.6518  (centro 0.4581, colas 0.8110)
+   pareado vs HAL: +0.010 (EE 0.049) | mejor 12, empate 0, peor 8 de 20 | tam. mediana 21.5 | tam. CV sin recortar, mediana 0
+T-HAL k150_sinSigma        mean|bias| = 0.3587  RMSE = 0.8661  (centro 0.8358, colas 0.8977)
+   pareado vs HAL: +0.180 (EE 0.075) | mejor 9, empate 0, peor 11 de 20 | tam. mediana 21 | tam. CV sin recortar, mediana 0
+T-HAL k500_sinSigma        mean|bias| = 1.3998  RMSE = 1.9290  (centro 2.0224, colas 1.8224)
+   pareado vs HAL: +1.299 (EE 0.099) | mejor 1, empate 0, peor 19 de 20 | tam. mediana 24.5 | tam. CV sin recortar, mediana 0
+T-HAL k500_tol1e_8         mean|bias| = 0.1761  RMSE = 0.9144  (centro 0.4447, colas 1.2360)
+   pareado vs HAL: +0.266 (EE 0.078) | mejor 5, empate 0, peor 15 de 20 | tam. mediana 21 | tam. CV sin recortar, mediana 0

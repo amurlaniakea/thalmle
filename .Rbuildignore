@@ -1,0 +1,7 @@
+^LICENSE$
+^experiments$
+^results$
+^.*\.log$
+^\.git$
+^\.github$
+^DISCLAIMER\.md$

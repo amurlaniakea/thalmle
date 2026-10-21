@@ -1,0 +1,31 @@
+nohup: no se tendrá en cuenta la entrada
+rep 1: 279 s
+rep 2: 283 s
+rep 3: 296 s
+rep 4: 304 s
+rep 5: 287 s
+rep 6: 298 s
+rep 7: 354 s
+rep 8: 360 s
+rep 9: 370 s
+rep 10: 364 s
+rep 11: 375 s
+rep 12: 394 s
+rep 13: 394 s
+rep 14: 380 s
+rep 15: 370 s
+rep 16: 372 s
+rep 17: 376 s
+rep 18: 354 s
+rep 19: 376 s
+rep 20: 383 s
+cfg: trt=uniform n=500 n_proj=500 replicas validas=20 de 20, tiempo medio 348 s
+HAL plug-in (sin targeting) mean|bias| = 0.1543  RMSE = 0.5679  (centro 0.5578, colas 0.5785)
+T-HAL legacy_c1_6          mean|bias| = 0.0826  RMSE = 0.3795  (centro 0.3351, colas 0.4224)
+   pareado vs HAL: -0.194 (EE 0.019) | mejor 19, empate 0, peor 1 de 20 | tam. mediana 22 | tam. CV sin recortar, mediana 0
+T-HAL honest_c1_6          mean|bias| = 0.0825  RMSE = 0.3834  (centro 0.3428, colas 0.4230)
+   pareado vs HAL: -0.190 (EE 0.017) | mejor 20, empate 0, peor 0 de 20 | tam. mediana 22 | tam. CV sin recortar, mediana 14.5
+T-HAL honest_c1_0          mean|bias| = 0.1414  RMSE = 0.5403  (centro 0.3955, colas 0.6623)
+   pareado vs HAL: -0.048 (EE 0.043) | mejor 13, empate 1, peor 6 de 20 | tam. mediana 14.5 | tam. CV sin recortar, mediana 14.5
+T-HAL legacy_c1_0          mean|bias| = 0.1543  RMSE = 0.5679  (centro 0.5578, colas 0.5785)
+   pareado vs HAL: +0.000 (EE 0.000) | mejor 0, empate 20, peor 0 de 20 | tam. mediana 0 | tam. CV sin recortar, mediana 0

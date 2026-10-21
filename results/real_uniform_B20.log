@@ -1,0 +1,24 @@
+rep 1: 141 s
+rep 2: 157 s
+rep 3: 149 s
+rep 4: 145 s
+rep 5: 135 s
+rep 6: 156 s
+rep 7: 183 s
+rep 8: 206 s
+rep 9: 201 s
+rep 10: 192 s
+rep 11: 201 s
+rep 12: 202 s
+rep 13: 194 s
+rep 14: 195 s
+rep 15: 202 s
+rep 16: 185 s
+rep 17: 209 s
+rep 18: 183 s
+rep 19: 200 s
+rep 20: 162 s
+cfg: dgp=1 trt=uniform n=500 max_degree=2 n_proj=25 replicas validas=20 de 20, tiempo medio 180 s, pkg=thalmle_real2
+HAL plug-in (sin targeting) mean|bias| = 0.1627  RMSE = 0.6012  (centro 0.5522, colas 0.6502)
+plug-in dirigido           mean|bias| = 0.1601  RMSE = 0.5915  (centro 0.5389, colas 0.6437)
+T-HAL (psi_hat)            mean|bias| = 0.1493  RMSE = 0.7590  (centro 0.7500, colas 0.7685)

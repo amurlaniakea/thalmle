@@ -1,0 +1,36 @@
+
+===== replica 19 | peso maximo observado 8.8 =====
+HAL: RMSE 0.889 | error a=1 +0.72, a=9 -1.26
+defecto     | plug-in dirigido RMSE 9.484 | T-HAL RMSE 7.645 | error a=1 +0.39, a=9 -36.33
+obs_max     | plug-in dirigido RMSE 4.818 | T-HAL RMSE 4.227 | error a=1 +0.39, a=9 -20.16
+obs_max_x2  | plug-in dirigido RMSE 6.890 | T-HAL RMSE 5.895 | error a=1 +0.39, a=9 -28.27
+cap10       | plug-in dirigido RMSE 5.198 | T-HAL RMSE 4.520 | error a=1 +0.39, a=9 -21.60
+g en a=1: mediana(g_est/g_verd) = 1.46 | peso max estimado 8.4 vs verdadero 309.3
+g en a=9: mediana(g_est/g_verd) = 1.10 | peso max estimado 46.2 vs verdadero 11295.6
+
+===== replica 20 | peso maximo observado 5.8 =====
+HAL: RMSE 0.776 | error a=1 +2.13, a=9 +1.64
+defecto     | plug-in dirigido RMSE 2.901 | T-HAL RMSE 2.771 | error a=1 +1.63, a=9 -12.93
+obs_max     | plug-in dirigido RMSE 1.086 | T-HAL RMSE 0.977 | error a=1 +1.64, a=9 -4.09
+obs_max_x2  | plug-in dirigido RMSE 1.333 | T-HAL RMSE 1.235 | error a=1 +1.63, a=9 -5.44
+cap10       | plug-in dirigido RMSE 1.276 | T-HAL RMSE 1.177 | error a=1 +1.63, a=9 -5.14
+g en a=1: mediana(g_est/g_verd) = 1.13 | peso max estimado 4.9 vs verdadero 397.0
+g en a=9: mediana(g_est/g_verd) = 1.83 | peso max estimado 65.1 vs verdadero 472.5
+
+===== replica 14 | peso maximo observado 5.1 =====
+HAL: RMSE 0.581 | error a=1 +0.59, a=9 +1.92
+defecto     | plug-in dirigido RMSE 1.440 | T-HAL RMSE 1.179 | error a=1 +1.21, a=9 -3.54
+obs_max     | plug-in dirigido RMSE 0.909 | T-HAL RMSE 0.765 | error a=1 +1.24, a=9 -2.08
+obs_max_x2  | plug-in dirigido RMSE 1.178 | T-HAL RMSE 0.976 | error a=1 +1.21, a=9 -2.93
+cap10       | plug-in dirigido RMSE 1.172 | T-HAL RMSE 0.973 | error a=1 +1.21, a=9 -2.92
+g en a=1: mediana(g_est/g_verd) = 1.09 | peso max estimado 12.0 vs verdadero 3003.1
+g en a=9: mediana(g_est/g_verd) = 1.70 | peso max estimado 18.8 vs verdadero 2232.1
+
+===== replica 1 | peso maximo observado 5.7 =====
+HAL: RMSE 0.743 | error a=1 -0.31, a=9 +3.18
+defecto     | plug-in dirigido RMSE 1.098 | T-HAL RMSE 0.586 | error a=1 -0.28, a=9 +0.46
+obs_max     | plug-in dirigido RMSE 0.842 | T-HAL RMSE 0.322 | error a=1 -0.27, a=9 +0.66
+obs_max_x2  | plug-in dirigido RMSE 0.889 | T-HAL RMSE 0.370 | error a=1 -0.28, a=9 +0.63
+cap10       | plug-in dirigido RMSE 0.879 | T-HAL RMSE 0.360 | error a=1 -0.28, a=9 +0.64
+g en a=1: mediana(g_est/g_verd) = 1.56 | peso max estimado 6.3 vs verdadero 1770.7
+g en a=9: mediana(g_est/g_verd) = 1.47 | peso max estimado 41.9 vs verdadero 495.4
