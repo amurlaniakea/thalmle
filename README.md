@@ -72,10 +72,15 @@ standard error. Samples have 20-30 replicates (the preprint uses 1,000).
 
 > **DGP 2.** Until 2026-10-20 the code used `g(w) = 4 1[w > -1] - 1[w > 0] +
 > 1[w > 1]`, which is not the preprint's `g(w) = 4 (1[w > -1] - 1[w > 0] +
-> 1[w > 1])`. The DGP 2 rows below were re-run on 2026-10-21 with the preprint's
-> DGP 2 (commit `71cfb72`, normal treatment, seeds 7000+b, 20 replicates; package
-> versions were not re-recorded for this run). The earlier DGP 2 files are kept in
-> `results/` with the suffix `_anterior` and are superseded. DGP 1 is unaffected.
+> 1[w > 1])`. The DGP 2 rows below come from runs on 2026-10-21 with the
+> preprint's DGP 2 (normal treatment, seeds 7000+b, 20 replicates). The one in the
+> table used the outcome HAL of order 0 (`THAL_QSO=0`, as in the preprint and in the
+> rest of the evidence; commit `d90e02b`, session in
+> `results/sessionInfo_dgp2_rerun.txt`). A first run, launched without
+> `THAL_QSO=0` (the environment of that shell was not recorded, so it presumably used
+> the default, order 1; commit `71cfb72`), is kept as
+> `results/capobs2_dgp2_qso1_normal_7000.*` and discussed below. Files with the
+> suffix `_anterior` come from the earlier, superseded `g(w)`. DGP 1 is unaffected.
 
 **Uniform treatment, DGP 1, default configuration** (four independent samples of 20):
 -0.194 (SE 0.019), -0.162 (0.014), -0.101 (0.023), -0.183 (0.020).
@@ -93,24 +98,34 @@ with seeds chosen after the variants were devised):
 |---|---|---|---|---|
 | DGP 1, seeds 7000+b (20) | +0.027 (0.083) | -0.113 (0.039) | -0.054 (0.055) | |
 | DGP 1, seeds 9000+b (30) | +0.118 (0.083) | -0.148 (0.040) | -0.104 (0.050) | -0.161 (0.041) |
-| DGP 2 (preprint), seeds 7000+b (20) | +0.299 (0.064) | +0.184 (0.038) | +0.229 (0.048) | +0.179 (0.037) |
+| DGP 2 (preprint), order 0, seeds 7000+b (20) | -0.044 (0.050) | -0.098 (0.042) | -0.078 (0.044) | -0.096 (0.041) |
 
 Per-dose-point RMSE (the preprint's metric), normal treatment, 30 replicates of
 DGP 1: HAL 0.698, default 0.732, `"obs_max"` 0.574. DGP 2 of the preprint (20
-replicates): HAL 0.875, default 1.093, `"obs_max"` 1.002, cap 10 1.038, cap 5 0.995.
+replicates, order 0): HAL 0.861, default 0.770, `"obs_max"` 0.735, cap 10 0.748,
+cap 5 0.738.
 
-On DGP 2 of the preprint every T-HAL variant is **worse than the plain HAL
-plug-in**: the paired difference is positive in 18 to 19 of 20 replicates for all
-four settings. `"obs_max"`, cap 10 and cap 5 do beat the default cap (in 19 of 20
-replicates, mean paired differences -0.116, -0.071 and -0.121), but that only
-reduces the loss against HAL. With 20 replicates this is pilot evidence, not a
-verdict on the estimator.
+On DGP 2 of the preprint (outcome HAL of order 0) all four T-HAL settings are on
+average better than the plain HAL plug-in, but by a small margin. The paired
+difference is -0.044 (SE 0.050) for the default cap, which cannot be told apart
+from zero, and about two standard errors below zero for `"obs_max"`, cap 10 and
+cap 5. T-HAL is better in 13, 12 and 11 of 20 replicates for those three settings
+and in 9 for the default. The three capped settings beat the default cap in 15 to
+18 of 20 replicates (mean paired differences -0.054, -0.034 and -0.052). The seeds
+are the same as in the first DGP 1 sample, so this is not a fresh sample; with 20
+replicates it is pilot evidence.
+
+The first DGP 2 run, made without `THAL_QSO=0` and presumably with the outcome HAL of
+order 1 (`results/capobs2_dgp2_qso1_*`), went the other way: T-HAL was worse than HAL in 18 to 19 of 20 replicates (paired
+differences +0.299, +0.184, +0.229 and +0.179; per-dose RMSE: HAL 0.875, default
+1.093, `"obs_max"` 1.002). The setting of the outcome HAL therefore changes the sign of
+the comparison, and the conclusions above are specific to order 0.
 
 `w_cap = "obs_max"` caps the counterfactual weights `omega(a) / g_n(a | W_i)` at
 the largest weight seen at the observed data. **It is not in the preprint.** It
 was devised after looking at failing replicates of DGP 1, then tested on fresh
-seeds of DGP 1. On the preprint's DGP 2 it improves on the default cap but not on
-the HAL plug-in. A cap of 5 works about as well, so what seems to matter is
+seeds of DGP 1. On the preprint's DGP 2 (order 0) it beats the default cap in 18 of 20
+replicates. A cap of 5 works about as well, so what seems to matter is
 not extrapolating the correction to doses that are almost impossible for some
 values of `W`; a fixed number such as 5 depends on the scale of the weights and
 should not be used as a default.
@@ -175,7 +190,9 @@ treatment the default `w_cap` is the unreliable configuration (see Evidence);
 ## Known issues / TODO
 
 * `fit_Q_hal()` reads its default smoothness order from the environment variable
-  `THAL_QSO` (default 1); it should be an explicit argument.
+  `THAL_QSO` (default 1); it should be an explicit argument. Forgetting `THAL_QSO=0` silently changes the
+  experiment (it happened once, see the DGP 2 note under Evidence); `check_capobs2.R`
+  now prints it in its `cfg:` line.
 * `predict.haldensify()` trims predicted densities at a floor that, according to
   the package NEWS, depends on the number of rows predicted; we saw
   batch-dependent outputs. We always call it with `trim = FALSE`.

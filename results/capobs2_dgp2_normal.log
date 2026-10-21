@@ -1,33 +1,33 @@
 nohup: no se tendrá en cuenta la entrada
-rep 1: 225 s
-rep 2: 230 s
-rep 3: 236 s
-rep 4: 236 s
-rep 5: 226 s
-rep 6: 245 s
-rep 7: 240 s
-rep 8: 234 s
-rep 9: 223 s
-rep 10: 190 s
-rep 11: 206 s
-rep 12: 196 s
-rep 13: 191 s
-rep 14: 191 s
-rep 15: 197 s
-rep 16: 200 s
-rep 17: 192 s
-rep 18: 188 s
-rep 19: 188 s
-rep 20: 189 s
-cfg: dgp=2 trt=normal n=500 replicas validas=20 de 20, tiempo medio 211 s (semillas 7000+b)
+rep 1: 317 s
+rep 2: 252 s
+rep 3: 410 s
+rep 4: 332 s
+rep 5: 516 s
+rep 6: 588 s
+rep 7: 328 s
+rep 8: 278 s
+rep 9: 220 s
+rep 10: 254 s
+rep 11: 226 s
+rep 12: 239 s
+rep 13: 262 s
+rep 14: 317 s
+rep 15: 372 s
+rep 16: 255 s
+rep 17: 239 s
+rep 18: 324 s
+rep 19: 236 s
+rep 20: 276 s
+cfg: dgp=2 trt=normal n=500 replicas validas=20 de 20, tiempo medio 312 s (semillas 7000+b)
 vs HAL      RMSE_pto   media_dif (EE)   mediana  reps>0.5  mejor   peor
-HAL            0.875
-defecto        1.093   +0.299 (0.064)    +0.245         3      1     19
-obs_max        1.002   +0.184 (0.038)    +0.138         2      2     18
-cap10          1.038   +0.229 (0.048)    +0.184         3      1     19
-cap5           0.995   +0.179 (0.037)    +0.135         1      2     18
+HAL            0.861
+defecto        0.770   -0.044 (0.050)    +0.009         0      9     11
+obs_max        0.735   -0.098 (0.042)    -0.038         0     13      7
+cap10          0.748   -0.078 (0.044)    -0.012         0     12      8
+cap5           0.738   -0.096 (0.041)    -0.027         0     11      9
 
 vs defecto   media_dif (EE)   mediana  mejor   peor
-obs_max      -0.116 (0.031)    -0.052     19      1
-cap10        -0.071 (0.024)    -0.027     19      1
-cap5         -0.121 (0.036)    -0.064     19      1
+obs_max      -0.054 (0.016)    -0.028     18      2
+cap10        -0.034 (0.013)    -0.013     18      2
+cap5         -0.052 (0.019)    -0.022     15      5
