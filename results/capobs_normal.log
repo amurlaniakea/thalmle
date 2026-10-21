@@ -1,0 +1,28 @@
+nohup: no se tendrá en cuenta la entrada
+rep 1: 321 s
+rep 2: 286 s
+rep 3: 272 s
+rep 4: 292 s
+rep 5: 263 s
+rep 6: 370 s
+rep 7: 325 s
+rep 8: 301 s
+rep 9: 275 s
+rep 10: 302 s
+rep 11: 287 s
+rep 12: 293 s
+rep 13: 281 s
+rep 14: 279 s
+rep 15: 279 s
+rep 16: 284 s
+rep 17: 275 s
+rep 18: 274 s
+rep 19: 304 s
+rep 20: 199 s
+cfg: trt=normal n=500 n_proj=500 replicas validas=20 de 20, tiempo medio 288 s (semillas 7000+b)
+variante    RMSE_pto   media_dif (EE)   mediana  media_10%  reps>0.5  mejor   peor
+HAL            0.699
+defecto        0.667   +0.027 (0.083)    -0.066     -0.016         2     11      9
+obs_max        0.585   -0.113 (0.039)    -0.154     -0.116         0     15      5
+cap10          0.620   -0.054 (0.055)    -0.106     -0.074         1     15      5
+tamano mediano: defecto 22  obs_max 22  cap10 22 

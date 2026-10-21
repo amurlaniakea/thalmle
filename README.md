@@ -123,8 +123,25 @@ should not be used as a default.
 | projection on selected `phi_j` | least squares on all observed doses | as described |
 | evaluation | 20-30 replicates, pooled and paired summaries | preprint: 1,000 replicates |
 
-Open questions for the authors are in `experiments/` (see the e-mail draft in the
-repository history, if included).
+Details the preprint does not specify (HAL settings, basis size and knots, `haldensify`
+options, tolerance of the pseudo-inverse) are open questions that remain to be
+clarified with the authors.
+
+## Defaults and the settings used in the experiments
+
+| setting | package default | used in the experiments |
+|---|---|---|
+| `w_cap` (counterfactual weights) | `NULL`: cap `sqrt(n) log(n/5)` as in the preprint | default, `"obs_max"`, 10 or 5 (see Evidence) |
+| `n_proj` (doses used by the projection) | 200 | 500, i.e. all observed doses (`n_proj = length(A)`) |
+| outcome HAL order (`smoothness_orders`, or `THAL_QSO`) | 1 | 0 |
+| `n_knots`, `c1`, `c2`, `k` | 50, 6, 9, 1 | same |
+| `fit_g_haldensify()` | 10 bins, `max_degree = 2`, `trim = FALSE` | same |
+| penalty | CV clipped to the window | same |
+
+With uniform treatment `w_cap` has no effect (all weights are 1). With normal
+treatment the default `w_cap` is the unreliable configuration (see Evidence);
+`"obs_max"` is experimental. A projection on only 25 doses was clearly worse
+(pooled RMSE 0.760 against 0.380 with all doses, uniform treatment).
 
 ## Reproducing the experiments
 
@@ -134,6 +151,11 @@ repository history, if included).
   `results/`. Most scripts take the package directory as first argument and were
   run with `THAL_QSO=0` (order of the outcome HAL) from the parent directory.
 * One replicate takes 3-6 minutes (the `haldensify` fit dominates).
+* The logs in `results/` are the record of what was run. Some scripts were run against
+  earlier development copies of the package (not included here) and hard-code those
+  directory names, so they may need small edits to run against this tree. Early scripts
+  also depend on the order in which random numbers are consumed, so rerunning them with a
+  different package version can give different samples.
 
 ## Known issues / TODO
 

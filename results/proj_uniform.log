@@ -1,0 +1,28 @@
+nohup: no se tendrá en cuenta la entrada
+rep 1: 178 s
+rep 2: 208 s
+rep 3: 215 s
+rep 4: 224 s
+rep 5: 211 s
+rep 6: 210 s
+rep 7: 215 s
+rep 8: 217 s
+rep 9: 213 s
+rep 10: 215 s
+rep 11: 314 s
+rep 12: 341 s
+rep 13: 310 s
+rep 14: 285 s
+rep 15: 301 s
+rep 16: 285 s
+rep 17: 326 s
+rep 18: 297 s
+rep 19: 281 s
+rep 20: 270 s
+cfg: trt=uniform n=500 replicas validas=20 de 20, tiempo medio 256 s, pkg=thalmle_real2
+HAL plug-in (sin targeting)    mean|bias| = 0.1543  RMSE = 0.5679  (centro 0.5578, colas 0.5785)
+plug-in dirigido               mean|bias| = 0.1385  RMSE = 0.5614  (centro 0.5490, colas 0.5746)
+T-HAL, n_proj=25               mean|bias| = 0.1583  RMSE = 0.7604  (centro 0.7783, colas 0.7405)
+T-HAL, n_proj=200              mean|bias| = 0.1160  RMSE = 0.3909  (centro 0.3483, colas 0.4322)
+T-HAL, n_proj=500              mean|bias| = 0.0826  RMSE = 0.3795  (centro 0.3351, colas 0.4224)
+mediana del tamano del modelo de trabajo: 22 
