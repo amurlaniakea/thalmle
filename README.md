@@ -70,11 +70,12 @@ Metric: for each replicate, the RMSE over 25 doses in [1, 9]; we report the
 **paired difference T-HAL minus HAL plug-in** (negative = T-HAL better) with its
 standard error. Samples have 20-30 replicates (the preprint uses 1,000).
 
-> **DGP 2 caveat.** The DGP 2 figures below (and the `*dgp2*` files in
-> `results/`) were produced with `g(w) = 4 1[w > -1] - 1[w > 0] + 1[w > 1]`,
-> an earlier reading that is not the preprint's `g(w) = 4 (1[w > -1] - 1[w > 0] +
-> 1[w > 1])`. The code now uses the preprint's DGP 2; these figures have not been
-> re-run and should not be quoted as DGP 2 of the preprint. DGP 1 is unaffected.
+> **DGP 2.** Until 2026-10-20 the code used `g(w) = 4 1[w > -1] - 1[w > 0] +
+> 1[w > 1]`, which is not the preprint's `g(w) = 4 (1[w > -1] - 1[w > 0] +
+> 1[w > 1])`. The DGP 2 rows below were re-run on 2026-10-21 with the preprint's
+> DGP 2 (commit `71cfb72`, normal treatment, seeds 7000+b, 20 replicates; package
+> versions were not re-recorded for this run). The earlier DGP 2 files are kept in
+> `results/` with the suffix `_anterior` and are superseded. DGP 1 is unaffected.
 
 **Uniform treatment, DGP 1, default configuration** (four independent samples of 20):
 -0.194 (SE 0.019), -0.162 (0.014), -0.101 (0.023), -0.183 (0.020).
@@ -92,16 +93,24 @@ with seeds chosen after the variants were devised):
 |---|---|---|---|---|
 | DGP 1, seeds 7000+b (20) | +0.027 (0.083) | -0.113 (0.039) | -0.054 (0.055) | |
 | DGP 1, seeds 9000+b (30) | +0.118 (0.083) | -0.148 (0.040) | -0.104 (0.050) | -0.161 (0.041) |
-| DGP 2, seeds 7000+b (20) | -0.017 (0.057) | -0.104 (0.039) | -0.073 (0.043) | -0.087 (0.043) |
+| DGP 2 (preprint), seeds 7000+b (20) | +0.299 (0.064) | +0.184 (0.038) | +0.229 (0.048) | +0.179 (0.037) |
 
 Per-dose-point RMSE (the preprint's metric), normal treatment, 30 replicates of
-DGP 1: HAL 0.698, default 0.732, `"obs_max"` 0.574. DGP 2 (20 replicates): HAL
-0.634, default 0.576, `"obs_max"` 0.527.
+DGP 1: HAL 0.698, default 0.732, `"obs_max"` 0.574. DGP 2 of the preprint (20
+replicates): HAL 0.875, default 1.093, `"obs_max"` 1.002, cap 10 1.038, cap 5 0.995.
+
+On DGP 2 of the preprint every T-HAL variant is **worse than the plain HAL
+plug-in**: the paired difference is positive in 18 to 19 of 20 replicates for all
+four settings. `"obs_max"`, cap 10 and cap 5 do beat the default cap (in 19 of 20
+replicates, mean paired differences -0.116, -0.071 and -0.121), but that only
+reduces the loss against HAL. With 20 replicates this is pilot evidence, not a
+verdict on the estimator.
 
 `w_cap = "obs_max"` caps the counterfactual weights `omega(a) / g_n(a | W_i)` at
 the largest weight seen at the observed data. **It is not in the preprint.** It
 was devised after looking at failing replicates of DGP 1, then tested on fresh
-seeds and on DGP 2. A cap of 5 works about as well, so what seems to matter is
+seeds of DGP 1. On the preprint's DGP 2 it improves on the default cap but not on
+the HAL plug-in. A cap of 5 works about as well, so what seems to matter is
 not extrapolating the correction to doses that are almost impossible for some
 values of `W`; a fixed number such as 5 depends on the scale of the weights and
 should not be used as a default.
@@ -170,7 +179,6 @@ treatment the default `w_cap` is the unreliable configuration (see Evidence);
 * `predict.haldensify()` trims predicted densities at a floor that, according to
   the package NEWS, depends on the number of rows predicted; we saw
   batch-dependent outputs. We always call it with `trim = FALSE`.
-* DGP 2 figures predate the fix to the DGP (see the caveat under Evidence) and need to be re-run.
 * Influence-curve variance and confidence intervals are not implemented.
 * The experiments live in the package tree for traceability; they are excluded
   from the built package (`.Rbuildignore`).
