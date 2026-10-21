@@ -79,3 +79,11 @@ test_that("the default cap is sqrt(n) log(n/5) and Inf disables it", {
     expect_equal(r0$psi_hat, r1$psi_hat, tolerance = 1e-8)
   }))
 })
+
+test_that("a grid outside range(A) triggers a warning", {
+  skip_if_not_installed("glmnet")
+  s <- local_setup_branches()
+  expect_warning(
+    quiet_glmnet(with(s, thal_core(d$A, d$W, d$Y, Q, g, om, c(-1, 5, 11)))),
+    "outside range")
+})

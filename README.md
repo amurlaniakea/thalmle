@@ -70,6 +70,12 @@ Metric: for each replicate, the RMSE over 25 doses in [1, 9]; we report the
 **paired difference T-HAL minus HAL plug-in** (negative = T-HAL better) with its
 standard error. Samples have 20-30 replicates (the preprint uses 1,000).
 
+> **DGP 2 caveat.** The DGP 2 figures below (and the `*dgp2*` files in
+> `results/`) were produced with `g(w) = 4 1[w > -1] - 1[w > 0] + 1[w > 1]`,
+> an earlier reading that is not the preprint's `g(w) = 4 (1[w > -1] - 1[w > 0] +
+> 1[w > 1])`. The code now uses the preprint's DGP 2; these figures have not been
+> re-run and should not be quoted as DGP 2 of the preprint. DGP 1 is unaffected.
+
 **Uniform treatment, DGP 1, default configuration** (four independent samples of 20):
 -0.194 (SE 0.019), -0.162 (0.014), -0.101 (0.023), -0.183 (0.020).
 T-HAL is better in 75 of 80 replicates.
@@ -164,6 +170,7 @@ treatment the default `w_cap` is the unreliable configuration (see Evidence);
 * `predict.haldensify()` trims predicted densities at a floor that, according to
   the package NEWS, depends on the number of rows predicted; we saw
   batch-dependent outputs. We always call it with `trim = FALSE`.
+* DGP 2 figures predate the fix to the DGP (see the caveat under Evidence) and need to be re-run.
 * Influence-curve variance and confidence intervals are not implemented.
 * The experiments live in the package tree for traceability; they are excluded
   from the built package (`.Rbuildignore`).

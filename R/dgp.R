@@ -2,15 +2,18 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
 # Data-generating processes of Section 7.1 (arXiv:2607.03824).
-# NOTE: the extracted text of the paper is garbled in two places; the
-# readings used here are ASSUMPTIONS to check against the PDF:
-#   * DGP 2:  g(w) = 4*1[w > -1] - 1[w > 0] + 1[w > 1]
-#   * normal treatment: A | W ~ N(5 + 1.5 W, sd = 2), truncated to [0, 10]
+# Checked against the PDF of the preprint (Section 7.1, 2026-10-20):
+#   * DGP 2:  g(w) = 4 * (1[w > -1] - 1[w > 0] + 1[w > 1]). The factor 4 covers
+#     the three terms. The extracted text loses the sign between the first two
+#     terms; the minus is read from "three sign-alternating" in the preprint.
+#     Before 2026-10-20 this file used 4*1[w > -1] - 1[w > 0] + 1[w > 1], which
+#     is NOT the preprint's DGP 2 (see NEWS).
+#   * normal treatment: A | W ~ N(5 + 1.5 W, sd = 2), truncated to [0, 10].
 
 g_fun_dgp <- function(w, dgp) {
   switch(as.character(dgp),
     "1" = 5 * (w > 0),
-    "2" = 4 * (w > -1) - (w > 0) + (w > 1),
+    "2" = 4 * ((w > -1) - (w > 0) + (w > 1)),
     "3" = 3 * sin(7 * pi * w),
     stop("dgp must be 1, 2 or 3"))
 }
@@ -24,7 +27,7 @@ Q0_dgp <- function(a, w, dgp) {
 Eg_dgp <- function(dgp) {
   switch(as.character(dgp),
     "1" = 5 * 0.5,
-    "2" = 4 * pnorm(1) - 0.5 + (1 - pnorm(1)),
+    "2" = 4 * (pnorm(1) - 0.5 + (1 - pnorm(1))),   # = 2
     "3" = 0,
     stop("dgp must be 1, 2 or 3"))
 }

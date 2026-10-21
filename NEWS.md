@@ -1,3 +1,15 @@
+# thalmle (development)
+
+* DGP 2 now follows the preprint: `g(w) = 4 (1[w > -1] - 1[w > 0] + 1[w > 1])`.
+  Earlier versions used `4 1[w > -1] - 1[w > 0] + 1[w > 1]`, so every DGP 2 figure
+  in `results/` and in the README was generated with a different DGP and must be
+  re-run before it is quoted.
+* `thal_core()` warns when `grid` has doses outside `range(A)`.
+* Tests for the options of `thal_core()` that were not covered, and smoke tests
+  for the wrappers around hal9001 and haldensify (skipped when those packages
+  are absent).
+* `haldensify (>= 0.2.8)` is now stated in `Suggests`.
+
 # thalmle 0.0.2
 
 * `thal_core()` gains experimental options: `w_cap = "obs_max"` (cap the
