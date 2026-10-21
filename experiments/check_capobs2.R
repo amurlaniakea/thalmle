@@ -31,8 +31,8 @@ rm1 <- function(e) sqrt(mean(e^2))
 hal <- sapply(res, function(o) rm1(o$init))
 v <- function(k) sapply(res, function(o) rm1(o$thal[[k]]))
 pw <- function(f) sqrt(rowMeans(sapply(res, f)^2))
-cat(sprintf("cfg: dgp=%d trt=%s n=500 replicas validas=%d de %d, tiempo medio %.0f s (semillas %d+b)\n",
-    dgp, trt, length(res), B, mean(tm), sb))
+cat(sprintf("cfg: dgp=%d trt=%s n=500 THAL_QSO=%s replicas validas=%d de %d, tiempo medio %.0f s (semillas %d+b)\n",
+    dgp, trt, Sys.getenv("THAL_QSO", "(sin definir: orden 1)"), length(res), B, mean(tm), sb))
 cat(sprintf("%-10s %9s %16s %9s %9s %6s %6s\n", "vs HAL", "RMSE_pto", "media_dif (EE)",
             "mediana", "reps>0.5", "mejor", "peor"))
 cat(sprintf("%-10s %9.3f\n", "HAL", mean(pw(function(o) o$init))))
