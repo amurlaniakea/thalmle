@@ -1,3 +1,6 @@
+# Copyright (C) 2026 Pedro Sordo Martínez
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 pkgload::load_all("thalmle_hermes2", quiet = TRUE)
 for (c1 in c(6, 3, 0)) {
   set.seed(10)

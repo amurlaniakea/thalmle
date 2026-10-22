@@ -1,3 +1,6 @@
+# Copyright (C) 2026 Pedro Sordo Martínez
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 suppressMessages({library(hal9001); library(haldensify)})
 cat("hal9001", as.character(packageVersion("hal9001")),
     " haldensify", as.character(packageVersion("haldensify")), "\n")

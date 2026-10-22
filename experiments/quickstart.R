@@ -1,3 +1,6 @@
+# Copyright (C) 2026 Pedro Sordo Martínez
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 # Quick smoke test with the real nuisance estimators (takes about 3 minutes).
 # Requires: install.packages(c("hal9001", "haldensify")) and the installed 'thalmle'.
 library(thalmle)

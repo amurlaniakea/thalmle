@@ -1,3 +1,6 @@
+# Copyright (C) 2026 Pedro Sordo Martínez
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 pkgload::load_all("thalmle", quiet = TRUE)
 set.seed(10)
 B <- 50
