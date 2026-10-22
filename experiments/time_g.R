@@ -1,3 +1,6 @@
+# Copyright (C) 2026 Pedro Sordo Martínez
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 suppressMessages(library(haldensify))
 pkgload::load_all("thalmle_real", quiet = TRUE)
 tm <- function(label, expr) {

@@ -1,3 +1,6 @@
+# Copyright (C) 2026 Pedro Sordo Martínez
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 res <- readRDS("tail_normal.rds")
 nm <- names(res[[1]]$thal)
 rm <- function(e) sqrt(mean(e^2))

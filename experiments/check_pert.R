@@ -1,3 +1,6 @@
+# Copyright (C) 2026 Pedro Sordo Martínez
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 args <- commandArgs(trailingOnly = TRUE)
 pkgdir <- args[1]; trt <- args[2]; B <- as.integer(args[3]); delta <- as.numeric(args[4])
 pkgload::load_all(pkgdir, quiet = TRUE)

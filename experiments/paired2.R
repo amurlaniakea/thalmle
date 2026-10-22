@@ -1,3 +1,6 @@
+# Copyright (C) 2026 Pedro Sordo Martínez
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 rm1 <- function(e) sqrt(mean(e^2))
 for (trt in c("uniform", "normal")) {
   res <- readRDS(sprintf("sigma2_%s.rds", trt))

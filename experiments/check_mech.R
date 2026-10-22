@@ -1,3 +1,6 @@
+# Copyright (C) 2026 Pedro Sordo Martínez
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 pkgload::load_all("thalmle_hermes2", quiet = TRUE)
 grid <- seq(1, 9, length.out = 25); tr <- true_drc(grid, 1)
 cen <- grid >= 3 & grid <= 7
