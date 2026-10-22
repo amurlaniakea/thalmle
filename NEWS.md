@@ -1,5 +1,8 @@
-# thalmle (development)
+# thalmle 0.0.3
 
+* The repository now contains the code that produced the evidence: `R/`, `tests/`,
+  `experiments/`, `results/` and `man/`. The `v0.0.2` tag on GitHub points to a
+  commit that only had documentation; use `v0.0.3`.
 * DGP 2 now follows the preprint: `g(w) = 4 (1[w > -1] - 1[w > 0] + 1[w > 1])`.
   Earlier versions used `4 1[w > -1] - 1[w > 0] + 1[w > 1]`, so the earlier DGP 2
   figures came from a different DGP. The DGP 2 experiment was re-run on 2026-10-21
